@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Cowntr2</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_spot_cows">Spot Cows</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_car_setup">Car Setup</string>
+    <string name="add_one_cow">Spot 1 Cow</string>
+    <string name="add_field_cow">Spot a cow field</string>
+    <string name="graveyard">Graveyard!</string>
+    <string name="default_cow_count">0</string>
 </resources>
