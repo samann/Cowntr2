@@ -5,8 +5,11 @@ import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
+    private val db = FirebaseFirestore.getInstance()
+    private var loaded = false
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -28,9 +31,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        val cowCountTextView = findViewById<TextView>(R.id.cow_count_textView)
+        cowCountTextView.setText(R.string.loading_count)
+        db.collection(USERS_KEY).document(USER_KEY).get().addOnCompleteListener { it ->
+            it.result?.let {
+                cowCountTextView.text = "${it["count"]}"
+                loaded = true
+            }
+        }
     }
+
 
     fun addOneCow(view: View) {
         val cowCountTextView = findViewById<TextView>(R.id.cow_count_textView)
@@ -44,10 +55,26 @@ class MainActivity : AppCompatActivity() {
 
     fun graveyard(view: View) {
         val cowCountTextView = findViewById<TextView>(R.id.cow_count_textView)
+        saveCurrentCount(0)
         cowCountTextView.text = "0"
     }
 
     private fun updateCount(text: String, count: Int): Int {
-        return Integer.parseInt(text) + count;
+        if (!loaded) {
+            return 0
+        }
+        val newCount = Integer.parseInt(text) + count
+        saveCurrentCount(newCount)
+        return newCount
+    }
+
+    private fun saveCurrentCount(newCount: Int) {
+        val cowData = hashMapOf("count" to newCount)
+        db.collection(USERS_KEY).document(USER_KEY).set(cowData)
+    }
+
+    companion object {
+        const val USER_KEY = "KING"
+        const val USERS_KEY = "users"
     }
 }
