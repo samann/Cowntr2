@@ -1,25 +1,36 @@
 package com.droidwolf.cowntr2
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BlankFragment.OnFragmentInteractionListener, AppCompatActivity() {
+    override fun onFragmentInteraction(uri: Uri) {}
+
     private val db = FirebaseFirestore.getInstance()
-    private var loaded = false
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_view, BlankFragment.newInstance(), "cowCount").commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
+                supportFragmentManager.findFragmentByTag("cowCount")?.let {
+                    supportFragmentManager.beginTransaction().remove(it).commit()
+                }
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
+                supportFragmentManager.findFragmentByTag("cowCount")?.let {
+                    supportFragmentManager.beginTransaction().remove(it).commit()
+                }
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -32,16 +43,8 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        val cowCountTextView = findViewById<TextView>(R.id.cow_count_textView)
-        cowCountTextView.setText(R.string.loading_count)
-        db.collection(USERS_KEY).document(USER_KEY).get().addOnCompleteListener { it ->
-            it.result?.let {
-                cowCountTextView.text = "${it["count"]}"
-                loaded = true
-            }
-        }
+        navView.selectedItemId = R.id.navigation_home
     }
-
 
     fun addOneCow(view: View) {
         val cowCountTextView = findViewById<TextView>(R.id.cow_count_textView)
@@ -60,9 +63,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateCount(text: String, count: Int): Int {
-        if (!loaded) {
-            return 0
-        }
         val newCount = Integer.parseInt(text) + count
         saveCurrentCount(newCount)
         return newCount
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveCurrentCount(newCount: Int) {
         val cowData = hashMapOf("count" to newCount)
-        db.collection(USERS_KEY).document(USER_KEY).set(cowData)
+        db.collection(USERS_KEY).document(USER_KEY).set(cowData).addOnFailureListener { Log.e("APP", "....failed....") }
     }
 
     companion object {

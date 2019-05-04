@@ -8,4 +8,5 @@
     <string name="graveyard">Graveyard!</string>
     <string name="default_cow_count">0</string>
     <string name="loading_count">Loading … Please wait</string>
+    <string name="internet_retry_msg">Try connecting to the internet</string>
 </resources>
