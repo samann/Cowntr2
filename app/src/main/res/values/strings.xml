@@ -9,4 +9,6 @@
     <string name="default_cow_count">0</string>
     <string name="loading_count">Loading … Please wait</string>
     <string name="internet_retry_msg">Try connecting to the internet</string>
+    <string name="edit_text_msg">Enter chat message</string>
+    <string name="send_chat_button_msg">Send</string>
 </resources>
