@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Cowntr2</string>
     <string name="title_spot_cows">Spot Cows</string>
-    <string name="add_one_cow">1 Cow</string>
+    <string name="add_one_cow">One Cow</string>
     <string name="add_field_cow">Cow Field</string>
     <string name="graveyard">Graveyard!</string>
     <string name="default_cow_count">0</string>

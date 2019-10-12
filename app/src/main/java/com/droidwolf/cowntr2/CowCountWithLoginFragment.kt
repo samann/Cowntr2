@@ -13,23 +13,23 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import com.droidwolf.cowntr2.databinding.FragmentCowCountBinding
+import com.droidwolf.cowntr2.databinding.FragmentCowCountWithLoginBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [CowCountFragment.OnFragmentInteractionListener] interface
+ * [CowCountWithLoginFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [CowCountFragment.newInstance] factory method to
+ * Use the [CowCountWithLoginFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class CowCountFragment : Fragment() {
+class CowCountWithLoginFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private val db = FirebaseFirestore.getInstance()
-    private lateinit var binding: FragmentCowCountBinding
+    private lateinit var binding: FragmentCowCountWithLoginBinding
     private val cowCount = CowCount()
 
     override fun onCreateView(
@@ -37,7 +37,7 @@ class CowCountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cow_count, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cow_count_with_login, container, false)
         binding.cowCount = cowCount
         binding.apply {
             oneCowButton.setOnClickListener {
@@ -74,7 +74,7 @@ class CowCountFragment : Fragment() {
             .document(COUNT_DATA).get().addOnFailureListener {
                 Log.e("APP", "\nFailed to load from FireBase")
                 binding.apply {
-                    cowCountTextView.text = getString(R.string.internet_retry_msg)
+                    cowCountUsername.text = getString(R.string.internet_retry_msg)
                     invalidateAll()
                 }
             }.addOnCompleteListener { it ->
@@ -89,11 +89,11 @@ class CowCountFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString())
-        }
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString())
+//        }
     }
 
     override fun onDetach() {
@@ -175,6 +175,6 @@ class CowCountFragment : Fragment() {
          * @return A new instance of fragment CountFragment.
          */
         @JvmStatic
-        fun newInstance() = CowCountFragment()
+        fun newInstance() = CowCountWithLoginFragment()
     }
 }
